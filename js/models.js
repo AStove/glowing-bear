@@ -67,6 +67,7 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
         var fullName = message.full_name;
         var shortName = message.short_name;
         var hidden = message.hidden;
+        var timeForEachLine = message.timeForEachLine;
         // If it's a channel, trim away the prefix (#, &, or +). If that is empty and the buffer
         // has a short name, use a space (because the prefix will be displayed separately, and we don't want
         // prefix + fullname, which would happen otherwise). Else, use null so that full_name is used
@@ -99,9 +100,6 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
         var server = message.local_variables.server;
 
         var pinned = message.local_variables.pinned === "true";
-
-        // hide timestamps for certain buffer types
-        var hideBufferLineTimes = type && type === 'relay';
 
         // Server buffers have this "irc.server.freenode" naming schema, which
         // messes the sorting up. We need it to be "irc.freenode" instead.
@@ -339,6 +337,7 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
             fullName: fullName,
             shortName: shortName,
             hidden: hidden,
+            timeForEachLine: timeForEachLine,
             trimmedName: trimmedName,
             prefix: prefix,
             number: number,
@@ -370,7 +369,6 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
             getHistoryDown: getHistoryDown,
             isNicklistEmpty: isNicklistEmpty,
             nicklistRequested: nicklistRequested,
-            hideBufferLineTimes: hideBufferLineTimes,
             pinned: pinned,
             queryNicklist: queryNicklist,
         };

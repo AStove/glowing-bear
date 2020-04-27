@@ -222,6 +222,7 @@ weechat.factory('handlers', ['$rootScope', '$log', 'models', 'plugins', 'notific
         buffer.title = message.title;
         buffer.number = message.number;
         buffer.hidden = message.hidden;
+        buffer.timeForEachLine = message.time_for_each_line;
 
         // reset unread counts, hotlist info will arrive shortly
         var server = models.getServerForBuffer(buffer);
