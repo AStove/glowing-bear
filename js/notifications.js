@@ -3,6 +3,18 @@ var weechat = angular.module('weechat');
 weechat.factory('notifications', ['$rootScope', '$log', 'models', 'settings', 'utils', function($rootScope, $log, models, settings, utils) {
     var serviceworker = false;
     var notifications = [];
+
+    // Check for serviceWorker support, and also disable serviceWorker if we're running in electron process, since that's just problematic and not necessary, since gb then already is in a separate process
+    if ('serviceWorker' in navigator && window.is_electron !== 1) {
+        $log.info('Service Worker is supported');
+        navigator.serviceWorker.register('serviceworker.js').then(function(reg) {
+            $log.info('Service Worker install:', reg);
+            serviceworker = true;
+        }).catch(function(err) {
+            $log.info('Service Worker err:', err);
+        });
+    }
+
     // Ask for permission to display desktop notifications
     var requestNotificationPermission = function() {
         // Firefox
@@ -22,17 +34,6 @@ weechat.factory('notifications', ['$rootScope', '$log', 'models', 'settings', 'u
                 $log.info('Notification permission status: ', havePermission === 0);
                 window.webkitNotifications.requestPermission();
             }
-        }
-
-        // Check for serviceWorker support, and also disable serviceWorker if we're running in electron process, since that's just problematic and not necessary, since gb then already is in a separate process
-        if ('serviceWorker' in navigator && window.is_electron !== 1) {
-            $log.info('Service Worker is supported');
-            navigator.serviceWorker.register('serviceworker.js').then(function(reg) {
-                $log.info('Service Worker install:', reg);
-                serviceworker = true;
-            }).catch(function(err) {
-                $log.info('Service Worker err:', err);
-            });
         }
 
         document.addEventListener('deviceready', function() {
