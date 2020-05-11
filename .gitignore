@@ -4,3 +4,7 @@ node_modules/
 # Electron stuff
 fonts/
 Glowing\ Bear-*/
+key.pem
+cert.pem
+package-lock.json
+cert.pem.asdf

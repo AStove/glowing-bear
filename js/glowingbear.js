@@ -12,12 +12,31 @@ var weechat = angular.module('weechat', ['ngRoute', 'localStorage', 'weechatMode
     // hacky way to be able to find out if we're in debug mode
     weechat.compileProvider = $compileProvider;
 }]);
+
 weechat.config(['$compileProvider', function ($compileProvider) {
     // hack to determine whether we're executing the tests
     if (typeof(it) === "undefined" && typeof(describe) === "undefined") {
         $compileProvider.debugInfoEnabled(false);
     }
 }]);
+
+weechat.config(['$routeProvider', '$locationProvider',
+    function($routeProvider, $locationProvider) {
+        $routeProvider.when('/', {
+            templateUrl: 'views/chat.html',
+            controller: 'WeechatCtrl'
+        }).when('/share', {
+            templateUrl: 'views/share.html',
+            controller: 'WeechatCtrl'
+        }).otherwise('/');
+
+        //remove hashbang from url
+        $locationProvider.html5Mode({
+            enabled: true,
+            requireBase: false
+        });
+    }
+]);
 
 weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout','$location', '$log', 'models', 'bufferResume', 'connection', 'notifications', 'utils', 'settings',
     function ($rootScope, $scope, $store, $timeout, $location, $log, models, bufferResume, connection, notifications, utils, settings)
@@ -563,7 +582,7 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
         var numLines = Math.ceil(areaHeight/lineHeight + 10);
         $scope.lines_per_screen = numLines;
     };
-    $scope.calculateNumLines();
+    //$scope.calculateNumLines();
 
     // get animationframe method
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
@@ -1004,20 +1023,4 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
     };
 
 }]);
-
-weechat.config(['$routeProvider', '$locationProvider',
-    function($routeProvider, $locationProvider) {
-        $routeProvider.when('', {
-            templateUrl: 'index.html',
-            controller: 'WeechatCtrl'
-        });
-
-        //remove hashbang from url
-        $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
-        });
-    }
-]);
-
 })();

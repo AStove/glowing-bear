@@ -1,4 +1,4 @@
-var CACHE_NAME = 'v1';
+var CACHE_NAME = 'v2';
 
 // File needs to be stored in the root of the app.
 this.addEventListener('install', function(event) {
