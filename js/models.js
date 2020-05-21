@@ -391,6 +391,7 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
         var displayed = message.displayed;
         var highlight = message.highlight;
         var content = parseRichText(message.message);
+        var hidden = false;
 
         // only put invisible angle brackets around nicks in normal messages
         // (for copying/pasting)
@@ -425,7 +426,8 @@ models.service('models', ['$rootScope', '$filter', 'bufferResume', function($roo
             displayed: displayed,
             prefixtext: prefixtext,
             text: rtext,
-            showHiddenBrackets: showHiddenBrackets
+            showHiddenBrackets: showHiddenBrackets,
+            hidden: hidden
         };
 
     };

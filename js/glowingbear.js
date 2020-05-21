@@ -156,6 +156,7 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
     });
 
     $rootScope.$on('activeBufferChanged', function(event, unreadSum) {
+        
         var ab = models.getActiveBuffer();
 
         // Discard unread lines above 2 screenfuls. We can click through to get more if needs be
@@ -169,7 +170,31 @@ weechat.controller('WeechatCtrl', ['$rootScope', '$scope', '$store', '$timeout',
             ab.allLinesFetched = false; // we just removed lines, so we don't have all of them. re-enable "fetch more lines"
         }
 
-        $scope.bufferlines = ab.lines;
+        // bufferlines in an array of array of bufferlines
+        if (!Array.isArray($scope.bufferlines)) {
+            $scope.bufferlines = [];
+        }
+        // If there's already two buffers worth of bufferlines, remove the oldes one
+        if ($scope.bufferlines.length > 1) {
+            $scope.bufferlines.shift();
+        }
+        // Set the lines as hidden, this hides them but keep them in the DOM
+        if ($scope.bufferlines.length >= 1) {
+            $scope.bufferlines[0].forEach( function(line) {
+                line.hidden = true;
+            })
+            // Remove the lines from the dom once the other lines are rendered
+            setTimeout(() => {
+                $scope.bufferlines[0] = [];
+            }, 1000);
+        }
+        ab.lines.forEach( function(line) {
+            line.hidden = false;
+        })
+        $scope.bufferlines.push(ab.lines);
+
+        console.log($scope.bufferlines.length);
+
         $scope.nicklist = ab.nicklist;
 
         // Send a request for the nicklist if it hasn't been loaded yet
